@@ -294,6 +294,7 @@ def xnnpack_unit_test(name, srcs, copts = [], mingw_copts = [], msys_copts = [],
             copts = xnnpack_std_cxxopts() + [
                 "-Iinclude",
                 "-Isrc",
+                "-g2",
             ] + select({
                 "//build_config:windows_x86_64_mingw": mingw_copts,
                 "//build_config:windows_x86_64_msys": msys_copts,
