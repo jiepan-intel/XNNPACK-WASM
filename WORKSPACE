@@ -84,6 +84,22 @@ http_archive(
     ],
 )
 
+# Emscripten
+http_archive(
+   name = "emsdk",
+   strip_prefix = "emsdk-3.1.58/bazel",
+   #sha256 = "8439411fe684a3f59d387b84fc1699c494405d3b5001c48b19ad681fe441bcce",
+   urls =[
+        "https://github.com/emscripten-core/emsdk/archive/3.1.58.tar.gz",
+   ]
+)
+
+load("@emsdk//:deps.bzl", emsdk_deps = "deps")
+emsdk_deps()
+
+load("@emsdk//:emscripten_deps.bzl", emsdk_emscripten_deps = "emscripten_deps")
+emsdk_emscripten_deps(emscripten_version = "3.1.58")
+
 # Android NDK location and version is auto-detected from $ANDROID_NDK_HOME environment variable
 android_ndk_repository(name = "androidndk")
 
