@@ -1,0 +1,64 @@
+diff --git a/test/spmm-microkernel-tester.h b/test/spmm-microkernel-tester.h
+index 2ad33b5be..ffd9ea51b 100644
+--- a/test/spmm-microkernel-tester.h
++++ b/test/spmm-microkernel-tester.h
+@@ -270,6 +270,59 @@ class SpMMMicrokernelTester {
+       xnn_f32_minmax_params params;
+       init_params(&params, output_min, output_max);
+ 
++      printf("size_t mc = %lu, nc = %lu;\n", m() * sizeof(float), n());
++      printf("float input[%lu] = { ", input.size() );
++      for(int i = 0 ; i < input.size(); i++)
++      {
++          printf("%f, ", input[i]);
++      }
++      printf("};\n");
++
++      printf("size_t offset = %lu;\n", first_kk * m());
++
++      printf("float w[%lu] = { ", w.size() );
++      for(int i = 0 ; i < w.size(); i++)
++      {
++          printf("%f, ", w[i]);
++      }
++      printf("};\n");
++
++      printf("int32_t widx_dmap[%lu] = { ", dmap.size() );
++      for(int i = 0 ; i < dmap.size(); i++)
++      {
++          printf("%d, ", dmap[i]);
++      }
++      printf("};\n");
++
++      printf("uint32_t nidx_nnzmap[%lu] = { ", nmap.size() );
++      for(int i = 0 ; i < nmap.size(); i++)
++      {
++          printf("%u, ", nmap[i]);
++      }
++      printf("};\n");
++
++      printf("float output[%lu] = {}; ", output.size() );
++
++      printf("size_t output_stride = %lu;\n", output_stride() * sizeof(float));
++/*
++union xnn_f32_minmax_params {
++  struct {
++    float min;
++    float max;
++  } scalar;
++  struct {
++    XNN_ALIGN(8) float min[2];
++    XNN_ALIGN(8) float max[2];
++  } wasmsimd;
++};
++*/
++      printf("params.wasmsimd.min[0] = %f;\n", params.wasmsimd.min[0]);
++      printf("params.wasmsimd.min[1] = %f;\n", params.wasmsimd.min[1]);
++
++      printf("params.wasmsimd.max[0] = %f;\n", params.wasmsimd.max[0]);
++      printf("params.wasmsimd.max[1] = %f;\n", params.wasmsimd.max[1]);
++
++
+       spmm(m() * sizeof(float), n(),
+         input.data() + first_kk * m(),
+         w.data(), dmap.data(), nmap.data(),
