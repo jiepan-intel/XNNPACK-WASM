@@ -53,10 +53,14 @@ f32_vhswish_test:
 clean:
 	bazel clean --expunge
 	bazel fetch end2end_bench
-	cp patch/benchmark.h /home/panjie/.cache/bazel/_bazel_panjie/$(hashid)/external/com_google_benchmark/include/benchmark/benchmark.h
-	cp patch/BUILD.bazel /home/panjie/.cache/bazel/_bazel_panjie/$(hashid)/external/cpuinfo/BUILD.bazel
-#symbol -g2
-	cp patch/crosstool.bzl  /home/panjie/.cache/bazel/_bazel_panjie/$(hashid)/external/emsdk/emscripten_toolchain/crosstool.bzl
+#cp patch/benchmark.h /home/panjie/.cache/bazel/_bazel_panjie/$(hashid)/external/com_google_benchmark/include/benchmark/benchmark.h
+#	cp patch/BUILD.bazel /home/panjie/.cache/bazel/_bazel_panjie/$(hashid)/external/cpuinfo/BUILD.bazel
+#
+	#symbol -g2
+#old
+	#cp patch/crosstool.bzl  /home/panjie/.cache/bazel/_bazel_panjie/$(hashid)/external/emsdk/emscripten_toolchain/crosstool.bzl
+#new
+	cp patch/toolchain.bzl /home/panjie/.cache/bazel/_bazel_panjie/$(hashid)/external/emsdk/emscripten_toolchain/toolchain.bzl
 
 
 run:
