@@ -82,8 +82,25 @@ http_archive(
     ],
 )
 
+# Emscripten toolchain
+http_archive(
+    name = "emsdk",
+    strip_prefix = "emsdk-3.1.32/bazel",
+    url = "https://github.com/emscripten-core/emsdk/archive/refs/tags/3.1.32.tar.gz",
+)
+
+load("@emsdk//:deps.bzl", emsdk_deps = "deps")
+
+emsdk_deps()
+
+load("@emsdk//:emscripten_deps.bzl", emsdk_emscripten_deps = "emscripten_deps")
+
+emsdk_emscripten_deps()
+
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+
 # Android NDK location and version is auto-detected from $ANDROID_NDK_HOME environment variable
-android_ndk_repository(name = "androidndk")
+# android_ndk_repository(name = "androidndk")
 
 # Android SDK location and API is auto-detected from $ANDROID_HOME environment variable
-android_sdk_repository(name = "androidsdk")
+# android_sdk_repository(name = "androidsdk")

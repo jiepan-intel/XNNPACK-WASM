@@ -55,3 +55,10 @@ build:macos --apple_platform_type=macos
 
 build:macos_arm64 --config=macos
 build:macos_arm64 --cpu=darwin_arm64
+
+# wasm configs
+build:ems_wasmsimd --crosstool_top=@emsdk//emscripten_toolchain:everything
+build:ems_wasmsimd --cpu=wasm
+build:ems_wasmsimd --features=wasm_simd
+build:ems_wasmsimd --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
+build:ems_wasmsimd --spawn_strategy=local
