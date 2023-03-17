@@ -54,6 +54,7 @@
   #define XNN_LOG_STDOUT STDOUT_FILENO
 #endif
 
+#if XNN_LOG_LEVEL >= XNN_LOG_ERROR
 #if XNN_LOG_TO_STDIO
 static void xnn_vlog(int output_handle, const char* prefix, size_t prefix_length, const char* format, va_list args) {
   char stack_buffer[XNN_LOG_STACK_BUFFER_SIZE];
@@ -122,6 +123,7 @@ cleanup:
 }
 #elif defined(__ANDROID__) && XNN_LOG_LEVEL > XNN_LOG_NONE
   static const char xnnpack_module[] = "XNNPACK";
+#endif
 #endif
 
 #if XNN_LOG_LEVEL >= XNN_LOG_DEBUG
