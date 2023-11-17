@@ -85,8 +85,8 @@ http_archive(
 # Emscripten toolchain
 http_archive(
     name = "emsdk",
-    strip_prefix = "emsdk-3.1.32/bazel",
-    url = "https://github.com/emscripten-core/emsdk/archive/refs/tags/3.1.32.tar.gz",
+    strip_prefix = "emsdk-3.1.26/bazel",
+    url = "https://github.com/emscripten-core/emsdk/archive/refs/tags/3.1.26.tar.gz",
 )
 
 load("@emsdk//:deps.bzl", emsdk_deps = "deps")

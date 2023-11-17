@@ -81,7 +81,7 @@ def xnnpack_cc_library(
         riscv_copts = [],
         wasm_copts = [],
         wasmsimd_copts = [],
-        wasmrelaxedsimd_copts = [],
+        wasmrelaxedsimd_copts = ["-msimd128 -mrelaxed-simd"],
         optimized_copts = ["-O2"],
         hdrs = [],
         defines = [],
@@ -390,6 +390,7 @@ def xnnpack_benchmark(name, srcs, copts = [], deps = [], tags = []):
             ":windows_x86_64_mingw": ["-Wno-unused-function"],
             ":windows_x86_64_msys": ["-Wno-unused-function"],
             ":windows_x86_64": [],
+            ":emscripten_wasmrelaxedsimd": ["-msimd128 -mrelaxed-simd"],
             "//conditions:default": ["-Wno-unused-function"],
         }) + copts,
         linkopts = select({
@@ -399,6 +400,10 @@ def xnnpack_benchmark(name, srcs, copts = [], deps = [], tags = []):
             "//conditions:default": [],
         }),
         linkstatic = True,
+        defines = select({
+            ":emscripten_wasmrelaxedsimd": ["XNN_ARCH_WASMRELAXEDSIMD=1"],
+            "//conditions:default": [],
+	}),
         deps = [
             "@com_google_benchmark//:benchmark",
         ] + deps + select({

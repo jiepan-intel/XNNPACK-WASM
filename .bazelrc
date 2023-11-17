@@ -62,3 +62,10 @@ build:ems_wasmsimd --cpu=wasm
 build:ems_wasmsimd --features=wasm_simd
 build:ems_wasmsimd --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
 build:ems_wasmsimd --spawn_strategy=local
+
+# wasm relaxed configs
+build:ems_wasmrelaxedsimd --crosstool_top=@emsdk//emscripten_toolchain:everything
+build:ems_wasmrelaxedsimd --cpu=wasm
+build:ems_wasmrelaxedsimd --features=wasm_relaxed_simd
+build:ems_wasmrelaxedsimd --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
+build:ems_wasmrelaxedsimd --spawn_strategy=local
