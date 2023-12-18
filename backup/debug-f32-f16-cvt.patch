@@ -1,0 +1,140 @@
+diff --git a/Makefile b/Makefile
+index 94a8e1331..b2ff1a7d9 100755
+--- a/Makefile
++++ b/Makefile
+@@ -4,7 +4,7 @@ PROXY=--action_env=HTTP_PROXY=$HTTP_PROXY
+ #WASMSIMD=--cpu=wasm  --copt=-msimd128  --crosstool_top=//toolchain:emscripten --spawn_strategy=local --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
+ 
+ #WASMSIMD=--cpu=wasm  --copt=-msimd128  --crosstool_top=@emsdk//emscripten_toolchain:everything --spawn_strategy=local --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
+-WASMSIMD=--cpu=wasm  --features=wasm_simd  --crosstool_top=@emsdk//emscripten_toolchain:everything --spawn_strategy=local --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
++WASMSIMD=--cpu=wasm  --features=wasm_simd  --copt="-Wno-error" --crosstool_top=@emsdk//emscripten_toolchain:everything --spawn_strategy=local --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
+ 
+ hashid=2e3bdbf9b98f7f6bc381f42b90e0379b
+ 
+diff --git a/patch/toolchain.bzl b/patch/toolchain.bzl
+index 3c6e039d4..8106c7d65 100644
+--- a/patch/toolchain.bzl
++++ b/patch/toolchain.bzl
+@@ -51,7 +51,7 @@ def flag_set(flags = None, features = None, not_features = None, **kwargs):
+     return _flag_set(**kwargs)
+ 
+ CROSSTOOL_DEFAULT_WARNINGS = [
+-    "-Wall",
++    #"-Wall",
+ ]
+ 
+ def _impl(ctx):
+diff --git a/src/f32-f16-vcvt/gen/f32-f16-vcvt-wasmsimd-x16.c b/src/f32-f16-vcvt/gen/f32-f16-vcvt-wasmsimd-x16.c
+index 10db2fe25..65a50cedc 100644
+--- a/src/f32-f16-vcvt/gen/f32-f16-vcvt-wasmsimd-x16.c
++++ b/src/f32-f16-vcvt/gen/f32-f16-vcvt-wasmsimd-x16.c
+@@ -48,11 +48,15 @@ void xnn_f32_f16_vcvt_ukernel__wasmsimd_x16(
+     const v128_t vabsx2 = wasm_f32x4_abs(vx2);
+     const v128_t vabsx3 = wasm_f32x4_abs(vx3);
+ 
++
++ //ok
+     const v128_t vsignx0 = wasm_v128_xor(vx0, vabsx0);
+     const v128_t vsignx1 = wasm_v128_xor(vx1, vabsx1);
+     const v128_t vsignx2 = wasm_v128_xor(vx2, vabsx2);
+     const v128_t vsignx3 = wasm_v128_xor(vx3, vabsx3);
+ 
++
++#if 0
+     v128_t vbias0 = wasm_i32x4_add(vabsx0, vexp_bias);
+     v128_t vbias1 = wasm_i32x4_add(vabsx1, vexp_bias);
+     v128_t vbias2 = wasm_i32x4_add(vabsx2, vexp_bias);
+@@ -80,10 +84,15 @@ void xnn_f32_f16_vcvt_ukernel__wasmsimd_x16(
+ 
+     const v128_t vnanmaskh0 = wasm_i16x8_narrow_i32x4(vnanmaskw0, vnanmaskw1);
+     const v128_t vnanmaskh1 = wasm_i16x8_narrow_i32x4(vnanmaskw2, vnanmaskw3);
+-
++#endif
+     const v128_t vsignh0 = wasm_i16x8_narrow_i32x4(vsignx0, vsignx1);
+     const v128_t vsignh1 = wasm_i16x8_narrow_i32x4(vsignx2, vsignx3);
+ 
++    //vsighh0 error
++
++    wasm_v128_store(o, vsignh0);
++    wasm_v128_store(o + 8, vsignh1);
++/*
+     vbias0 = wasm_i16x8_max(vbias0, vbias_min);
+     vbias1 = wasm_i16x8_max(vbias1, vbias_min);
+     vbias2 = wasm_i16x8_max(vbias2, vbias_min);
+@@ -120,13 +129,19 @@ void xnn_f32_f16_vcvt_ukernel__wasmsimd_x16(
+     const v128_t vabsh0 = wasm_v128_bitselect(vnanh, vnonsignh0, vnanmaskh0);
+     const v128_t vabsh1 = wasm_v128_bitselect(vnanh, vnonsignh1, vnanmaskh1);
+ 
++    //absh0, absh1 error
++
+     const v128_t vh0 = wasm_v128_or(vabsh0, vsignh0);
+     const v128_t vh1 = wasm_v128_or(vabsh1, vsignh1);
+ 
+     wasm_v128_store(o, vh0);
+     wasm_v128_store(o + 8, vh1);
++    */
+     o += 16;
++
+   }
++
++#if 0
+   for (; batch >= 8 * sizeof(float); batch -= 8 * sizeof(float)) {
+     const v128_t vx_lo = wasm_v128_load(input);
+     const v128_t vx_hi = wasm_v128_load(input + 4);
+@@ -219,7 +234,6 @@ void xnn_f32_f16_vcvt_ukernel__wasmsimd_x16(
+     const v128_t vnonsignw_hi = wasm_i32x4_add(vmantw_hi, vexpw_hi);
+ 
+     const v128_t vnonsignh = wasm_i16x8_narrow_i32x4(vnonsignw_lo, vnonsignw_hi);
+-
+     const v128_t vabsh = wasm_v128_bitselect(vnanh, vnonsignh, vnanmaskh);
+ 
+     v128_t vh = wasm_v128_or(vabsh, vsignh);
+@@ -238,4 +252,5 @@ void xnn_f32_f16_vcvt_ukernel__wasmsimd_x16(
+       wasm_v128_store16_lane(o, vh, 0);
+     }
+   }
++#endif
+ }
+diff --git a/test/vcvt-microkernel-tester.h b/test/vcvt-microkernel-tester.h
+index 5ad5529a2..72661ca9c 100644
+--- a/test/vcvt-microkernel-tester.h
++++ b/test/vcvt-microkernel-tester.h
+@@ -123,15 +123,23 @@ class VCvtMicrokernelTester {
+ 
+   void Test(xnn_f32_f16_vcvt_ukernel_fn vcvt, xnn_init_f32_f16_cvt_params_fn init_params = nullptr) const {
+     std::random_device random_device;
+-    auto rng = std::mt19937(random_device());
++    //auto rng = std::mt19937(random_device());
++    auto rng = std::mt19937(1);
+     std::uniform_real_distribution<float> f32dist(-100.0f, 100.0f);
+ 
+     std::vector<float> input(batch_size() + XNN_EXTRA_BYTES / sizeof(float));
+     std::vector<uint16_t> output(batch_size());
+-    for (size_t iteration = 0; iteration < iterations(); iteration++) {
++    //for (size_t iteration = 0; iteration < iterations(); iteration++) {
++    for (size_t iteration = 0; iteration < 1; iteration++) {
+       std::generate(input.begin(), input.end(), [&]() { return f32dist(rng); });
+       std::fill(output.begin(), output.end(), UINT16_C(0x7E00) /* NaN */);
+ 
++      for(auto iter=input.begin(); iter!= input.end(); iter++) {
++        printf("%f, ", *iter);
++      }
++      printf("\n");
++
++
+       union xnn_f32_f16_cvt_params params;
+       if (init_params != nullptr) {
+         init_params(&params);
+@@ -140,6 +148,12 @@ class VCvtMicrokernelTester {
+       // Call optimized micro-kernel.
+       vcvt(batch_size() * sizeof(float), input.data(), output.data(), &params);
+ 
++      printf("output");
++      for (size_t i = 0; i < batch_size(); i++) {
++        printf("%u ", uint32_t(output[i]));
++      }
++      printf("\n");
++
+       // Verify results.
+       for (size_t i = 0; i < batch_size(); i++) {
+         ASSERT_EQ(output[i], fp16_ieee_from_fp32_value(input[i]))
