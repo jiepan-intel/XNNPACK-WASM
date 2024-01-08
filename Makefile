@@ -12,6 +12,7 @@ hashid=2e3bdbf9b98f7f6bc381f42b90e0379b
 
 
 D8=/home/panjie/web/src/v82/v8/out.gn/x64.release-vtune/d8
+BAZEL=/home/panjie/apx/work/XNNPACK/bazel-6.3.2-linux-x86_64
 
 #all: f32_gemm_test
 #all: f32_gemm_minmax_test
@@ -20,35 +21,35 @@ D8=/home/panjie/web/src/v82/v8/out.gn/x64.release-vtune/d8
 all: end2end_bench f32_gemm_bench f32_vhswish_bench f32_spmm_bench
 
 f32_gemm_e2e_bench:
-	bazel build $(VERBOSE) $(DEFINE) -c opt  $(WASMSIMD) f32_gemm_e2e_bench 2>&1 | tee log2.log
+	$(BAZEL) build $(VERBOSE) $(DEFINE) -c opt  $(WASMSIMD) f32_gemm_e2e_bench 2>&1 | tee log2.log
 #mv -f bazel-bin/f32_gemm_e2e_bench bazel-bin/f32_gemm_e2e_bench.js
 
 f32_gemm_bench:
-	bazel build $(PROXY) $(VERBOSE) $(DEFINE) -c opt  $(WASMSIMD) f32_gemm_bench 2>&1 | tee log2.log
+	$(BAZEL) build $(PROXY) $(VERBOSE) $(DEFINE) -c opt  $(WASMSIMD) f32_gemm_bench 2>&1 | tee log2.log
 
 f32_spmm_bench:
-	bazel build $(PROXY) $(VERBOSE) $(DEFINE) -c opt  $(WASMSIMD) f32_spmm_bench 2>&1 | tee log2.log
+	$(BAZEL) build $(PROXY) $(VERBOSE) $(DEFINE) -c opt  $(WASMSIMD) f32_spmm_bench 2>&1 | tee log2.log
 
 end2end_bench:
-	bazel build  $(PROXY) $(VERBOSE) $(DEFINE) -c opt  $(WASMSIMD) end2end_bench 2>&1 | tee log2.log
+	$(BAZEL) build  $(PROXY) $(VERBOSE) $(DEFINE) -c opt  $(WASMSIMD) end2end_bench 2>&1 | tee log2.log
 
 f32_gemm_test:
-	bazel build  $(PROXY)  $(VERBOSE) $(DEFINE) -c opt  $(WASMSIMD) f32_gemm_test  2>&1 | tee log2.log
+	$(BAZEL) build  $(PROXY)  $(VERBOSE) $(DEFINE) -c opt  $(WASMSIMD) f32_gemm_test  2>&1 | tee log2.log
 
 f32_gemm_minmax_test:
-	bazel build  $(PROXY)  $(VERBOSE) $(DEFINE) -c opt  $(WASMSIMD) f32_gemm_minmax_test  2>&1 | tee log2.log
+	$(BAZEL) build  $(PROXY)  $(VERBOSE) $(DEFINE) -c opt  $(WASMSIMD) f32_gemm_minmax_test  2>&1 | tee log2.log
 
 f32_gemm_relu_bench:
-	bazel build  $(PROXY)  $(VERBOSE) $(DEFINE) -c opt  $(WASMSIMD) f32_gemm_relu_bench  2>&1 | tee log2.log
+	$(BAZEL) build  $(PROXY)  $(VERBOSE) $(DEFINE) -c opt  $(WASMSIMD) f32_gemm_relu_bench  2>&1 | tee log2.log
 
 f32_gemm_relu_test:
-	bazel build  $(PROXY)  $(VERBOSE) $(DEFINE) -c opt  $(WASMSIMD) f32_gemm_relu_test  2>&1 | tee log2.log
+	$(BAZEL) build  $(PROXY)  $(VERBOSE) $(DEFINE) -c opt  $(WASMSIMD) f32_gemm_relu_test  2>&1 | tee log2.log
 
 f32_vhswish_bench:
-	bazel build  $(PROXY)  $(VERBOSE) $(DEFINE) -c opt  $(WASMSIMD) f32_vhswish_bench  2>&1 | tee log2.log
+	$(BAZEL) build  $(PROXY)  $(VERBOSE) $(DEFINE) -c opt  $(WASMSIMD) f32_vhswish_bench  2>&1 | tee log2.log
 
 f32_vhswish_test:
-	bazel build  $(PROXY)  $(VERBOSE) $(DEFINE) -c opt  $(WASMSIMD) f32_vhswish_test  2>&1 | tee log2.log
+	$(BAZEL) build  $(PROXY)  $(VERBOSE) $(DEFINE) -c opt  $(WASMSIMD) f32_vhswish_test  2>&1 | tee log2.log
 
 clean:
 	bazel clean --expunge
