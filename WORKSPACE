@@ -101,7 +101,7 @@ load("@emsdk//:emscripten_deps.bzl", emsdk_emscripten_deps = "emscripten_deps")
 emsdk_emscripten_deps(emscripten_version = "3.1.56")
 
 # Android NDK location and version is auto-detected from $ANDROID_NDK_HOME environment variable
-android_ndk_repository(name = "androidndk")
+#android_ndk_repository(name = "androidndk")
 
 # Android SDK location and API is auto-detected from $ANDROID_HOME environment variable
-android_sdk_repository(name = "androidsdk")
+#android_sdk_repository(name = "androidsdk")
