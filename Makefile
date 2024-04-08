@@ -5,6 +5,7 @@ PROXY=--action_env=HTTP_PROXY=$HTTP_PROXY
 
 #WASMSIMD=--cpu=wasm  --copt=-msimd128  --crosstool_top=@emsdk//emscripten_toolchain:everything --spawn_strategy=local --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
 WASMSIMD=--cpu=wasm  --features=wasm_simd  --crosstool_top=@emsdk//emscripten_toolchain:everything --spawn_strategy=local --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
+#WASMSIMD=--cpu=wasm  --features=wasm_relaxed_simd  --crosstool_top=@emsdk//emscripten_toolchain:everything --spawn_strategy=local --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
 
 hashid=2e3bdbf9b98f7f6bc381f42b90e0379b
 
@@ -61,7 +62,7 @@ clean:
 #old
 	#cp patch/crosstool.bzl  /home/panjie/.cache/bazel/_bazel_panjie/$(hashid)/external/emsdk/emscripten_toolchain/crosstool.bzl
 #new
-	cp patch/toolchain.bzl /home/panjie/.cache/bazel/_bazel_panjie/$(hashid)/external/emsdk/emscripten_toolchain/toolchain.bzl
+#cp patch/toolchain.bzl /home/panjie/.cache/bazel/_bazel_panjie/$(hashid)/external/emsdk/emscripten_toolchain/toolchain.bzl
 
 
 run:
