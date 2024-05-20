@@ -121,6 +121,7 @@ _ISA_TO_UTILCHECK_MAP = {
   "rvvfp16arith": "CheckRVVFP16ARITH",
   "wasmpshufb": "CheckWAsmPSHUFB",
   "wasmsdot": "CheckWAsmSDOT",
+  "wasmvnnisdot": "CheckWAsmVNNISDOT",
   "wasmblendvps": "CheckWAsmBLENDVPS",
 }
 
@@ -155,6 +156,7 @@ _ISA_TO_CHECK_MAP = {
   "rvvfp16arith": "TEST_REQUIRES_RISCV_VECTOR_FP16_ARITH",
   "wasmpshufb": "TEST_REQUIRES_WASM_PSHUFB",
   "wasmsdot": "TEST_REQUIRES_WASM_SDOT",
+  "wasmvnnisdot": "CheckWAsmVNNISDOT",
   "wasmblendvps": "TEST_REQUIRES_WASM_BLENDVPS",
 }
 

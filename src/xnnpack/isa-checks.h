@@ -368,8 +368,16 @@
         GTEST_SKIP(); \
       } \
     } while (0)
+  #define TEST_REQUIRES_WASM_VNNI_SDOT \
+    do { \
+      const struct xnn_hardware_config* hardware_config = xnn_init_hardware_config(); \
+      if (hardware_config == nullptr || !hardware_config->use_wasm_vnni_sdot) { \
+        GTEST_SKIP(); \
+      } \
+    } while (0)
 #else
   #define TEST_REQUIRES_WASM_SDOT
+  #define TEST_REQUIRES_WASM_VNNI_SDOT
 #endif
 
 #if XNN_ARCH_WASMRELAXEDSIMD
