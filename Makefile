@@ -61,6 +61,12 @@ qs8_qc8w_gemm_minmax_fp32_test:
 qs8_qc8w_igemm_minmax_fp32_test:
 	$(BAZEL) build  $(PROXY) $(VERBOSE) $(DEFINE) -c opt  $(WASMSIMD) qs8_qc8w_igemm_minmax_fp32_test 2>&1 | tee log2.log
 
+qs8_qc8w_gemm_fp32_bench:
+	$(BAZEL) build  $(PROXY) $(VERBOSE) $(DEFINE) -c opt  $(WASMSIMD) qs8_qc8w_gemm_fp32_bench 2>&1 | tee log2.log
+
+qs8_gemm_e2e_bench:
+	$(BAZEL) build  $(PROXY) $(VERBOSE) $(DEFINE) -c opt  $(WASMSIMD) qs8_gemm_e2e_bench 2>&1 | tee log2.log
+
 clean:
 	bazel clean --expunge
 	bazel fetch end2end_bench

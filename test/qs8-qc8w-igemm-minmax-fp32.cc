@@ -2768,11 +2768,11 @@ std::vector<GemmTestParams> CreateTests1(
           [](GemmMicrokernelTester& tester) {
             tester.Test(xnn_qs8_qc8w_igemm_minmax_fp32_ukernel_3x4c16__wasmsdot,
                         xnn_init_qs8_qc8w_conv_minmax_fp32_wasmsimd_params,
-                        xnn_pack_qs8_conv_goki_w,
+                        xnn_pack_qs8_to_qu8_conv_goki_w,
                         xnn_qs8_requantize_fp32);
           },
           []() {
-            TEST_REQUIRES_WASM_SDOT;
+            TEST_REQUIRES_WASM_VNNI_SDOT;
           })),
       [](const testing::TestParamInfo<GemmTest::ParamType>& info) {
         return info.param.test_name;

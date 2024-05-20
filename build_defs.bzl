@@ -406,7 +406,7 @@ def xnnpack_benchmark(name, srcs, copts = [], deps = [], tags = []):
             "//build_config:windows_x86_64_mingw": ["-Wno-unused-function"],
             "//build_config:windows_x86_64_msys": ["-Wno-unused-function"],
             "//build_config:windows_x86_64": [],
-            "//build_config:emscripten_wasmrelaxedsimd": ["-msimd128 -mrelaxed-simd"],
+            "//build_config:emscripten_wasmrelaxedsimd": ["-Wno-unused-function -msimd128 -mrelaxed-simd"],
             "//conditions:default": ["-Wno-unused-function"],
         }) + copts,
         linkopts = select({

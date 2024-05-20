@@ -264,6 +264,7 @@ static void init_hardware_config(void) {
       wasm_i32x4_extract_lane(overflow_output, 1),
       wasm_i32x4_extract_lane(overflow_output, 2),
       wasm_i32x4_extract_lane(overflow_output, 3));
+      // hardware_config.use_wasm_vnni_sdot = true;
     }
     {
       const v128_t input1 = wasm_i32x4_const(0xF0F0F0F0, 0xAAAAAAAA, 0xCCCCCCCC, 0x99999999);
