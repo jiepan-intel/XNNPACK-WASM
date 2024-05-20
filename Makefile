@@ -4,16 +4,16 @@ PROXY=--action_env=HTTP_PROXY=$HTTP_PROXY
 #WASMSIMD=--cpu=wasm  --copt=-msimd128  --crosstool_top=//toolchain:emscripten --spawn_strategy=local --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
 
 #WASMSIMD=--cpu=wasm  --copt=-msimd128  --crosstool_top=@emsdk//emscripten_toolchain:everything --spawn_strategy=local --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
-WASMSIMD=--cpu=wasm  --features=wasm_simd  --crosstool_top=@emsdk//emscripten_toolchain:everything --spawn_strategy=local --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
-#WASMSIMD=--cpu=wasm  --features=wasm_relaxed_simd  --crosstool_top=@emsdk//emscripten_toolchain:everything --spawn_strategy=local --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
+# WASMSIMD=--cpu=wasm  --features=wasm_simd  --crosstool_top=@emsdk//emscripten_toolchain:everything --spawn_strategy=local --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
+WASMSIMD=--cpu=wasm  --features=wasm_relaxed_simd  --crosstool_top=@emsdk//emscripten_toolchain:everything --spawn_strategy=local --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
 
 hashid=2e3bdbf9b98f7f6bc381f42b90e0379b
 
 #WASMSIMD=--config=wasm
 
 
-D8=/home/panjie/web/src/v82/v8/out.gn/x64.release-vtune/d8
-BAZEL=/home/panjie/apx/work/XNNPACK/bazel-6.3.2-linux-x86_64
+D8=/home/fanchen/v8/v8/out/x64.release/avx10/d8
+BAZEL=bazel
 
 #all: f32_gemm_test
 #all: f32_gemm_minmax_test
@@ -51,6 +51,15 @@ f32_vhswish_bench:
 
 f32_vhswish_test:
 	$(BAZEL) build  $(PROXY)  $(VERBOSE) $(DEFINE) -c opt  $(WASMSIMD) f32_vhswish_test  2>&1 | tee log2.log
+
+qs8_gemm_e2e_bench:
+	$(BAZEL) build  $(PROXY) $(VERBOSE) $(DEFINE) -c opt  $(WASMSIMD) qs8_gemm_e2e_bench 2>&1 | tee log2.log
+
+qs8_qc8w_gemm_minmax_fp32_test:
+	$(BAZEL) build  $(PROXY) $(VERBOSE) $(DEFINE) -c opt  $(WASMSIMD) qs8_qc8w_gemm_minmax_fp32_test 2>&1 | tee log2.log
+
+qs8_qc8w_igemm_minmax_fp32_test:
+	$(BAZEL) build  $(PROXY) $(VERBOSE) $(DEFINE) -c opt  $(WASMSIMD) qs8_qc8w_igemm_minmax_fp32_test 2>&1 | tee log2.log
 
 clean:
 	bazel clean --expunge
